@@ -15,23 +15,31 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ResourcesShow({ formFields, formData }: { formFields: any; formData: any }) {
-    const { data, setData, post, processing, errors } = useForm(formData);
+export default function ResourcesShow({ formFields, formData, pageProperties }: { formFields: any; formData: any; pageProperties: any }) {
+    const { data, setData, post, put, processing, errors } = useForm(formData);
+    
     const handleSubmit = () => {
-        post(window.location.pathname);
+        if (data.id) {
+            // Update existing resource
+            put(`/${pageProperties.resource}/${data.id}`);
+        } else {
+            // Create new resource
+            post(`/${pageProperties.resource}`);
+        }
     };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Routing" />
+            <Head title={pageProperties.title} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4">
                     <FormPanel
-                        title="Title"
+                        title={pageProperties.title}
                         fields={formFields}
                         data={data}
                         errors={errors as Record<string, string>}
                         setData={setData}
                         onSubmit={handleSubmit}
+                        alwaysEditing={data.id === null}
                         loading={processing}
                     />
                 </div>

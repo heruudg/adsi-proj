@@ -14,12 +14,13 @@ class ResourceController extends Controller
     protected $tbName;
     protected $with;
 
+    protected $objName;
     protected $tableHeader;
     protected $formFields;
     public function __construct(){
-        $objName = $this->decamelize(str_replace('Controller','',(new \ReflectionClass($this))->getShortName()));
-        $this->tbName = \Illuminate\Support\Pluralizer::plural($objName,2);
-        $this->model = 'App\\Models\\' . str_replace('_', '', ucwords($objName, '_'));
+        $this->objName = $this->decamelize(str_replace('Controller','',(new \ReflectionClass($this))->getShortName()));
+        $this->tbName = \Illuminate\Support\Pluralizer::plural($this->objName,2);
+        $this->model = 'App\\Models\\' . str_replace('_', '', ucwords($this->objName, '_'));
     }
 
     private function decamelize($string) {
@@ -33,23 +34,12 @@ class ResourceController extends Controller
         }
         return $data;
     }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request  $request)
-    {
-        $perpage = $request->query('perpage')?$request->query('perpage'):15;
-        $orderCol = $request->query('sortby')?$request->query('sortby')[0]:'id';
-        $orderDirection = 'asc';
-        if($request->query('sortDesc')){
-            $orderDirection = $request->query('sortDesc')[0] == 'true'?'desc':'asc';
-        }
-        $data = $this->prepareData($request);
-        $data = $data->orderBy($orderCol,$orderDirection)->paginate($perpage);
-        return Inertia::render('resources/listing', [
-            "tableHeader" => $this->tableHeader,
-            "tableData" => $data,
-        ]);
+
+    protected function getPageProperties(){
+        return [
+            "title" => "Resources",
+            "resource" => $this->objName,
+        ];
     }
 
 
@@ -111,12 +101,45 @@ class ResourceController extends Controller
 
     }
 
+    protected function save(Request $request, int $id = null){
+        $data = $this->prepareStoreData($request, (int)$id);
+        $data->save();
+        $this->afterStoreData($request, $data);
+        return $data;
+    }
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request  $request)
+    {
+        $perpage = $request->query('perpage')?$request->query('perpage'):15;
+        $orderCol = $request->query('sortby')?$request->query('sortby')[0]:'id';
+        $orderDirection = 'asc';
+        if($request->query('sortDesc')){
+            $orderDirection = $request->query('sortDesc')[0] == 'true'?'desc':'asc';
+        }
+        $data = $this->prepareData($request);
+        $data = $data->orderBy($orderCol,$orderDirection)->paginate($perpage);
+        return Inertia::render('resources/listing', [
+            "tableHeader" => $this->tableHeader,
+            "tableData" => $data,
+            "pageProperties" => $this->getPageProperties(),
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
+    {   
+        $data = [];
+        foreach ($this->getColumns() as $key => $value) {
+            $data[$value] = null;
+        }
+        return Inertia::render('resources/show', [
+            "formData" => $data,
+            "formFields" => $this->formFields,
+            "pageProperties" => $this->getPageProperties(),
+        ]);
     }
 
     /**
@@ -136,6 +159,7 @@ class ResourceController extends Controller
         return Inertia::render('resources/show', [
             "formData" => $data,
             "formFields" => $this->formFields,
+            "pageProperties" => $this->getPageProperties(),
         ]);
     }
 
@@ -147,12 +171,11 @@ class ResourceController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+    public function update(Request $request, $id)
     {
-        //
+        $data = $this->save($request, $id);
+        return to_route("{$this->objName}.show", $data->id);
     }
 
     /**

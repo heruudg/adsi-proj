@@ -22,6 +22,7 @@ interface FormPanelProps {
   onDelete?: () => void;
   submitLabel?: string;
   loading?: boolean;
+  alwaysEditing?: boolean;
 }
 
 export default function FormPanel({
@@ -33,43 +34,55 @@ export default function FormPanel({
   onSubmit,
   onDelete,
   submitLabel = 'Save',
-  loading = false
+  loading = false,
+  alwaysEditing = false
 }: FormPanelProps) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(alwaysEditing);
   
   const handleToggleEdit = () => {
-    setIsEditing(!isEditing);
+    if (!alwaysEditing) {
+      setIsEditing(!isEditing);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit?.();
-    setIsEditing(false);
+    
+    // Only disable editing mode if not set to always editing
+    if (!alwaysEditing) {
+      setIsEditing(false);
+    }
   };
+  
+  // Determine if we should show fields in edit mode
+  const showEditMode = alwaysEditing || isEditing;
   
   return (
     <Card className="rounded-xl">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
           <h3>{title}</h3>
-          <div className="flex space-x-2">
-            {!isEditing ? (
-              <>
-                <Button variant="outline" size="sm" onClick={handleToggleEdit}>
-                  Edit
-                </Button>
-                {onDelete && (
-                  <Button variant="destructive" size="sm" onClick={onDelete}>
-                    Delete
+          {!alwaysEditing && (
+            <div className="flex space-x-2">
+              {!isEditing ? (
+                <>
+                  <Button variant="outline" size="sm" onClick={handleToggleEdit}>
+                    Edit
                   </Button>
-                )}
-              </>
-            ) : (
-              <Button variant="outline" size="sm" onClick={handleToggleEdit}>
-                Cancel
-              </Button>
-            )}
-          </div>
+                  {onDelete && (
+                    <Button variant="destructive" size="sm" onClick={onDelete}>
+                      Delete
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <Button variant="outline" size="sm" onClick={handleToggleEdit}>
+                  Cancel
+                </Button>
+              )}
+            </div>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-10 py-8">
@@ -78,7 +91,7 @@ export default function FormPanel({
             <div key={index} className="grid gap-2">
               <Label htmlFor={field.name}>{field.label}</Label>
               
-              {isEditing ? (
+              {showEditMode ? (
                 <Input
                   id={field.name}
                   type={field.type}
@@ -94,11 +107,11 @@ export default function FormPanel({
                 </div>
               )}
               
-              {isEditing && <InputError message={errors[field.name]} />}
+              {showEditMode && <InputError message={errors[field.name]} />}
             </div>
           ))}
 
-          {isEditing && onSubmit && (
+          {(showEditMode || alwaysEditing) && onSubmit && (
             <div className="flex justify-end">
               <Button type="submit" disabled={loading}>
                 {loading ? 'Processing...' : submitLabel}
