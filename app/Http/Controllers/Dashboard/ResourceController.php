@@ -15,6 +15,7 @@ class ResourceController extends Controller
     protected $with;
 
     protected $tableHeader;
+    protected $formFields;
     public function __construct(){
         $objName = $this->decamelize(str_replace('Controller','',(new \ReflectionClass($this))->getShortName()));
         $this->tbName = \Illuminate\Support\Pluralizer::plural($objName,2);
@@ -133,7 +134,8 @@ class ResourceController extends Controller
     {
         $data = $this->prepareShowData($request, $id);
         return Inertia::render('resources/show', [
-            "data" => $data,
+            "formData" => $data,
+            "formFields" => $this->formFields,
         ]);
     }
 

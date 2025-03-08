@@ -30,4 +30,21 @@ class RoutingController extends ResourceController
             "column" => "updated_at",
         ]
     ];
+
+    protected $formFields = [
+        [
+            "type" => "text",
+            "label" => "Name",
+            "name" => "name",
+            "placeholder" => "Name",
+            "required" => true,
+        ],
+        [
+            "type" => "text",
+            "label" => "Code",
+            "name" => "code",
+            "placeholder" => "Code",
+            "required" => true,
+        ],
+    ];
 }
