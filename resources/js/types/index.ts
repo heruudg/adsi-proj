@@ -39,3 +39,16 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface SelectOption {
+  label: string;
+  value: string | number;
+}
+
+export interface FormField {
+  name: string;
+  label: string;
+  type: string;
+  placeholder?: string;
+  options?: SelectOption[];
+}
+

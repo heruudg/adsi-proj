@@ -1,29 +1,13 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { 
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
-} from '@/components/ui/select';
-
-interface SelectOption {
-  label: string;
-  value: string | number;
-}
-
-interface FormField {
-  name: string;
-  label: string;
-  type: string;
-  placeholder?: string;
-  options?: SelectOption[];
-}
+import { FormField } from '@/types';
+import ReadOnlyField from './form-fields/read-only-field';
+import SelectField from './form-fields/select-field';
+import TextareaField from './form-fields/textarea-field';
+import InputField from './form-fields/input-field';
 
 interface FormPanelProps {
   title: string;
@@ -70,77 +54,42 @@ export default function FormPanel({
     }
   };
   
-  // Render read-only field
-  const renderReadOnlyField = (field: FormField) => (
-    <div className="py-2 px-3 border border-transparent rounded-md bg-muted/30">
-      {field.type === 'select' && field.options 
-        ? field.options.find(opt => opt.value.toString() === data[field.name]?.toString())?.label || 
-          <span className="text-muted-foreground italic">Not specified</span>
-        : data[field.name] || 
-          <span className="text-muted-foreground italic">Not specified</span>
-      }
-    </div>
-  );
-
-  // Render select input
-  const renderSelectField = (field: FormField) => (
-    <Select
-      name={field.name}
-      value={data[field.name]?.toString() || ""}
-      onValueChange={(value) => setData(field.name, value)}
-    >
-      <SelectTrigger>
-        <SelectValue placeholder={field.placeholder || `Select ${field.label}`} />
-      </SelectTrigger>
-      <SelectContent>
-        {field.options?.map((option) => (
-          <SelectItem key={`${field.name}-${option.value}`} value={option.value.toString()}>
-            {option.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-
-  // Render textarea
-  const renderTextareaField = (field: FormField) => (
-    <textarea
-      id={field.name}
-      name={field.name}
-      className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-      value={data[field.name] || ""}
-      onChange={(e) => setData(field.name, e.target.value)}
-      placeholder={field.placeholder}
-      rows={4}
-    />
-  );
-
-  // Render standard input
-  const renderInputField = (field: FormField) => (
-    <Input
-      id={field.name}
-      type={field.type}
-      name={field.name}
-      autoComplete="off"
-      value={data[field.name] || ""}
-      onChange={(e) => setData(field.name, e.target.value)}
-      placeholder={field.placeholder}
-    />
-  );
+  // Handle field changes
+  const handleFieldChange = (name: string, value: any) => {
+    setData(name, value);
+  };
   
   // Render the appropriate input field based on type and mode
   const renderFormField = (field: FormField) => {
     if (!showEditMode) {
-      return renderReadOnlyField(field);
+      return <ReadOnlyField field={field} data={data} />;
     }
     
     switch (field.type) {
       case 'select':
-        return renderSelectField(field);
+        return (
+          <SelectField 
+            field={field} 
+            value={data[field.name]} 
+            onChange={handleFieldChange} 
+          />
+        );
       case 'textarea':
-        return renderTextareaField(field);
+        return (
+          <TextareaField 
+            field={field} 
+            value={data[field.name]} 
+            onChange={handleFieldChange} 
+          />
+        );
       default:
-        return renderInputField(field);
+        return (
+          <InputField 
+            field={field} 
+            value={data[field.name]} 
+            onChange={handleFieldChange} 
+          />
+        );
     }
   };
 
