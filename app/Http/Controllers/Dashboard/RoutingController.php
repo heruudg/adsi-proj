@@ -46,6 +46,17 @@ class RoutingController extends ResourceController
             "placeholder" => "Code",
             "required" => true,
         ],
+        [
+            "type" => "select",
+            "label" => "Is Active",
+            "name" => "is_active",
+            "placeholder" => "Is Active",
+            "options" => [
+                ["label" => "Active", "value" => 1],
+                ["label" => "Inactive", "value" => 0]
+            ],
+            "required" => true,
+        ],
     ];
     
 }

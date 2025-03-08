@@ -147,7 +147,8 @@ class ResourceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->save($request);
+        return to_route("{$this->objName}.show", $data->id);
     }
 
     /**
