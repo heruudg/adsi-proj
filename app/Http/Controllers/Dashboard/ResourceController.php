@@ -15,10 +15,15 @@ class ResourceController extends Controller
     protected $with;
 
     protected $objName;
+
+    protected $objTitle;
     protected $tableHeader;
     protected $formFields;
     public function __construct(){
         $this->objName = $this->decamelize(str_replace('Controller','',(new \ReflectionClass($this))->getShortName()));
+        if(!$this->objTitle){
+            $this->objTitle = ucwords(str_replace('_',' ',$this->objName));
+        }
         $this->tbName = \Illuminate\Support\Pluralizer::plural($this->objName,2);
         $this->model = 'App\\Models\\' . str_replace('_', '', ucwords($this->objName, '_'));
     }
@@ -37,9 +42,22 @@ class ResourceController extends Controller
 
     protected function getPageProperties(){
         return [
-            "title" => "Resources",
+            "title" => $this->objTitle,
             "resource" => $this->objName,
         ];
+    }
+
+    protected function setPageData($data){
+        $baseBcTitle = $this->objTitle;
+        $baseBcUrl = $this->objName;
+        $breadcrumbs = [
+            [
+            'title' => $baseBcTitle,
+            'href' => "/{$baseBcUrl}",
+            ],
+        ];
+        $o = array_merge(["pageProperties" => $this->getPageProperties()],$data);
+        return $o;
     }
 
 
@@ -120,11 +138,10 @@ class ResourceController extends Controller
         }
         $data = $this->prepareData($request);
         $data = $data->orderBy($orderCol,$orderDirection)->paginate($perpage);
-        return Inertia::render('resources/listing', [
+        return Inertia::render('resources/listing', $this->setPageData([
             "tableHeader" => $this->tableHeader,
-            "tableData" => $data,
-            "pageProperties" => $this->getPageProperties(),
-        ]);
+            "tableData" => $data
+        ]));
     }
     /**
      * Show the form for creating a new resource.
@@ -157,11 +174,9 @@ class ResourceController extends Controller
     public function show(Request $request, $id)
     {
         $data = $this->prepareShowData($request, $id);
-        return Inertia::render('resources/show', [
+        return Inertia::render('resources/show', $this->setPageData([
             "formData" => $data,
-            "formFields" => $this->formFields,
-            "pageProperties" => $this->getPageProperties(),
-        ]);
+            "formFields" => $this->formFields]));
     }
 
     /**
