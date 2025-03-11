@@ -32,23 +32,27 @@ class ResourceController extends Controller
     private function seedTableAndFormHead(){
         if(!$this->tableHeader){
             $this->tableHeader = array_map(function($col){
-                return [
-                    "title" => ucwords(str_replace('_',' ',$col)),
-                    "column" => $col,
-                ];
-            }, $this->getColumns());
+            return [
+                "title" => ucwords(str_replace('_',' ',$col)),
+                "column" => $col,
+            ];
+            }, array_filter($this->getColumns(), function($col) {
+            return $col !== 'deleted_at';
+            }));
         }
 
         if(!$this->formFields){
             $this->formFields = array_map(function($col){
-                return [
-                    "type" => "text",
-                    "label" => ucwords(str_replace('_',' ',$col)),
-                    "name" => $col,
-                    "placeholder" => ucwords(str_replace('_',' ',$col)),
-                    "required" => true,
-                ];
-            }, $this->getColumns());
+            return [
+                "type" => "text",
+                "label" => ucwords(str_replace('_',' ',$col)),
+                "name" => $col,
+                "placeholder" => ucwords(str_replace('_',' ',$col)),
+                "required" => true,
+            ];
+            }, array_filter($this->getColumns(), function($col) {
+            return $col !== 'deleted_at';
+            }));
         }
     }
     private function decamelize($string) {
