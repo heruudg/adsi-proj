@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Routing extends Model
+class ManufacturingOrder extends Model
 {
     //
 }

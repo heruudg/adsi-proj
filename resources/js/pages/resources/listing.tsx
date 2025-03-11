@@ -20,6 +20,7 @@ interface ResourcesListingProps {
     pageProperties: {
         title: string;
         resource: string;
+        pk: string;
     };
 }
 
@@ -38,7 +39,12 @@ export default function ResourcesListing({ tableHeader, tableData, pagePropertie
                     </Link>
                 </div>
                 <div className="grid auto-rows-min gap-4">
-                    <Table header={tableHeader} data={tableData} />
+                    <Table header={tableHeader} data={tableData} resourceDef={
+                        {
+                            resource: pageProperties.resource,
+                            pk: pageProperties.pk
+                        }
+                    }/>
                 </div>
             </div>
         </AppLayout>

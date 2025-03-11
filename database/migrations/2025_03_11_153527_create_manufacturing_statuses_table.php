@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('work_centers', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('code')->unique();
-            $table->text('description')->nullable();
-            $table->decimal('hourly_rate', 10, 2)->default(0);
-            $table->integer('capacity_hours')->default(0);
-            $table->boolean('is_active')->default(true);
+        Schema::create('manufacturing_statuses', function (Blueprint $table) {
+            $table->id('mfg_stat_id');
+            $table->string('mfg_stat_name', 50);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('manufacturing_statuses');
     }
 };

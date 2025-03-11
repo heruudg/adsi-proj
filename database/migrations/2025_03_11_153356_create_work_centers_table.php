@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('boms', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('code')->unique();
-            $table->decimal('quantity', 10, 2);
-            $table->string('unit');
-            $table->boolean('is_active')->default(true);
+        Schema::create('work_centers', function (Blueprint $table) {
+            $table->id('work_center_id');
+            $table->string('work_ctr_name', 50);
+            $table->string('work_ctr_desc', 100);
             $table->timestamps();
             $table->softDeletes();
+
         });
-        
     }
 
     /**
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('work_centers');
     }
 };

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,8 +17,14 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => Faker::create()->name,
+            'email' => Faker::create()->unique()->safeEmail,
+        ]);
+        
+        // Run seeders in the correct order (dependencies first)
+        $this->call([
+            InventoryLocationSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

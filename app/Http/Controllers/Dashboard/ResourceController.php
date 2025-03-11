@@ -26,8 +26,31 @@ class ResourceController extends Controller
         }
         $this->tbName = \Illuminate\Support\Pluralizer::plural($this->objName,2);
         $this->model = 'App\\Models\\' . str_replace('_', '', ucwords($this->objName, '_'));
+        $this->seedTableAndFormHead();
     }
 
+    private function seedTableAndFormHead(){
+        if(!$this->tableHeader){
+            $this->tableHeader = array_map(function($col){
+                return [
+                    "title" => ucwords(str_replace('_',' ',$col)),
+                    "column" => $col,
+                ];
+            }, $this->getColumns());
+        }
+
+        if(!$this->formFields){
+            $this->formFields = array_map(function($col){
+                return [
+                    "type" => "text",
+                    "label" => ucwords(str_replace('_',' ',$col)),
+                    "name" => $col,
+                    "placeholder" => ucwords(str_replace('_',' ',$col)),
+                    "required" => true,
+                ];
+            }, $this->getColumns());
+        }
+    }
     private function decamelize($string) {
         return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $string));
     }
@@ -44,6 +67,7 @@ class ResourceController extends Controller
         return [
             "title" => $this->objTitle,
             "resource" => $this->objName,
+            "pk" => $this->getColumns()[0],
         ];
     }
 
@@ -131,7 +155,7 @@ class ResourceController extends Controller
     public function index(Request  $request)
     {
         $perpage = $request->query('perpage')?$request->query('perpage'):15;
-        $orderCol = $request->query('sortby')?$request->query('sortby')[0]:'id';
+        $orderCol = $request->query('sortby')?$request->query('sortby')[0]:$this->getColumns()[0];
         $orderDirection = 'asc';
         if($request->query('sortDesc')){
             $orderDirection = $request->query('sortDesc')[0] == 'true'?'desc':'asc';
