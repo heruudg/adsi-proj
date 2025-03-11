@@ -24,7 +24,12 @@ class DatabaseSeeder extends Seeder
         // Run seeders in the correct order (dependencies first)
         $this->call([
             InventoryLocationSeeder::class,
+            WorkCenterSeeder::class,
+            ManufacturingStatusSeeder::class,
             ProductSeeder::class,
+            RawMaterialSeeder::class,
+            BillOfMaterialSeeder::class,
+            ManufacturingOrderSeeder::class,
         ]);
     }
 }

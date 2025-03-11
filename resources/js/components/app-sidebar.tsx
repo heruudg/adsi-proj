@@ -9,9 +9,14 @@ import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Routing',
-        url: '/routing',
+        title: 'Product',
+        url: '/product',
         icon: LayoutGrid,
+    },
+    {
+        title: 'Inventory Location',
+        url: '/inventory_location',
+        icon: Folder,
     },
 ];
 

@@ -2,9 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RawMaterial extends Model
 {
-    //
+    use HasFactory, SoftDeletes;
+
+    protected $primaryKey = 'material_id';
+    
+    protected $fillable = [
+        'invt_loc_name',
+        'material_name',
+        'material_quantity',
+        'material_uom',
+    ];
 }
