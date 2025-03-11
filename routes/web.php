@@ -15,6 +15,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     $resources = [
         'product',
         'inventory_location',
+        'bill_of_materials',
+        'manufacturing_order',
+        'manufacturing_status',
+        'raw_material',
+        'work_center',
     ];
 
     foreach ($resources as $name) {
