@@ -33,7 +33,15 @@ export function Table({ header = [], data = [], resourceDef = { resource: '', pk
                             {header.map((col, index) => (
                                 <td className='px-6 py-3 whitespace-nowrap' key={index}>
                                     <div className='flex items-center'>
-                                        {row[col.column]}
+                                        {(() => {
+                                            const columnPath = col.column.split('.');
+                                            let value = row;
+                                            for (const key of columnPath) {
+                                                value = value?.[key];
+                                                if (value === undefined) break;
+                                            }
+                                            return value;
+                                        })()}
                                     </div>
                                 </td>
                             ))}

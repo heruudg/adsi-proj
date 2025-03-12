@@ -11,7 +11,7 @@ class ProductController extends ResourceController
     protected $tableHeader = [
         [
             "title" => "Inventory Location",
-            "column" => "invt_loc_name",
+            "column" => "inventory_location.invt_loc_name",
         ],
         [
             "title" => "Product Name",
@@ -26,4 +26,6 @@ class ProductController extends ResourceController
             "column" => "product_uom",
         ],
     ];
+
+    protected $with = ['inventoryLocation'];
 }
