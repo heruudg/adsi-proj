@@ -38,6 +38,7 @@ class ResourceController extends Controller
             return [
                 "title" => ucwords(str_replace('_',' ',$col)),
                 "column" => $col,
+                "type" => in_array($col, ['created_at', 'updated_at']) ? "datetime" : "text",
             ];
             }, array_filter($this->getColumns(), function($col) {
             return $col !== 'deleted_at';

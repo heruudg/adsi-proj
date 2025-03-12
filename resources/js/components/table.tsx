@@ -40,6 +40,19 @@ export function Table({ header = [], data = [], resourceDef = { resource: '', pk
                                                 value = value?.[key];
                                                 if (value === undefined) break;
                                             }
+    
+                                            // Handle date formatting if the value is a date
+                                            if (value && col.type === 'datetime' && !isNaN(new Date(value).getTime())) {
+                                                const date = new Date(value);
+                                                return date.toLocaleString(); // Format as locale date and time
+                                            } else if (value && col.type === 'date' && !isNaN(new Date(value).getTime())) {
+                                                const date = new Date(value);
+                                                return date.toLocaleDateString(); // Format as locale date
+                                            } else if (value && col.type === 'time' && !isNaN(new Date(value).getTime())) {
+                                                const date = new Date(value);
+                                                return date.toLocaleTimeString(); // Format as locale time
+                                            }
+    
                                             return value;
                                         })()}
                                     </div>

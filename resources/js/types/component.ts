@@ -10,4 +10,5 @@ export interface CrudResource {
 export interface TableHeader {
     title: string;
     column: string;
+    type?: 'text' | 'datetime' | 'date' | 'time';
 }
