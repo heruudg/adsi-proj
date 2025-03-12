@@ -19,6 +19,8 @@ class ResourceController extends Controller
     protected $objTitle;
     protected $tableHeader;
     protected $formFields;
+
+    protected $pk;
     public function __construct(){
         $this->objName = $this->decamelize(str_replace('Controller','',(new \ReflectionClass($this))->getShortName()));
         if(!$this->objTitle){
@@ -27,6 +29,7 @@ class ResourceController extends Controller
         $this->tbName = \Illuminate\Support\Pluralizer::plural($this->objName,2);
         $this->model = 'App\\Models\\' . str_replace('_', '', ucwords($this->objName, '_'));
         $this->seedTableAndFormHead();
+        $this->pk = $this->getColumns()[0];
     }
 
     private function seedTableAndFormHead(){
@@ -169,6 +172,12 @@ class ResourceController extends Controller
             $orderDirection = $request->query('sortDesc')[0] == 'true'?'desc':'asc';
         }
         $data = $this->prepareData($request);
+        
+        // Exclude soft-deleted records
+        if(in_array('deleted_at', $this->getColumns())) {
+            $data = $data->whereNull('deleted_at');
+        }
+        
         $data = $data->orderBy($orderCol,$orderDirection)->paginate($perpage);
         return Inertia::render('resources/listing', $this->setPageData([
             "tableHeader" => $this->tableHeader,
@@ -197,7 +206,7 @@ class ResourceController extends Controller
     public function store(Request $request)
     {
         $data = $this->save($request);
-        return to_route("{$this->objName}.show", $data->id);
+        return to_route("{$this->objName}.show", $data->{$this->pk});
     }
 
     /**
@@ -223,7 +232,7 @@ class ResourceController extends Controller
     public function update(Request $request, $id)
     {
         $data = $this->save($request, $id);
-        return to_route("{$this->objName}.show", $data->id);
+        return to_route("{$this->objName}.show", parameters: $data->{$this->pk});
     }
 
     /**
@@ -231,7 +240,10 @@ class ResourceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $model = $this->model::findOrFail($id);
+        $model->delete();
+        
+        return redirect()->route("{$this->objName}.index")->with('message', "{$this->objTitle} has been deleted successfully.");
     }
 
 }

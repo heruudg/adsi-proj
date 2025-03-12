@@ -8,6 +8,17 @@ import ReadOnlyField from './form-fields/read-only-field';
 import SelectField from './form-fields/select-field';
 import TextareaField from './form-fields/textarea-field';
 import InputField from './form-fields/input-field';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Trash2 } from 'lucide-react';
 
 interface FormPanelProps {
   title: string;
@@ -20,6 +31,7 @@ interface FormPanelProps {
   submitLabel?: string;
   loading?: boolean;
   alwaysEditing?: boolean;
+  deleteConfirmationMessage?: string;
 }
 
 export default function FormPanel({
@@ -32,9 +44,11 @@ export default function FormPanel({
   onDelete,
   submitLabel = 'Save',
   loading = false,
-  alwaysEditing = false
+  alwaysEditing = false,
+  deleteConfirmationMessage = 'Are you sure you want to delete this item? This action cannot be undone.'
 }: FormPanelProps) {
   const [isEditing, setIsEditing] = useState(alwaysEditing);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const showEditMode = alwaysEditing || isEditing;
   
   // Handle edit mode toggle
@@ -52,6 +66,16 @@ export default function FormPanel({
     if (!alwaysEditing) {
       setIsEditing(false);
     }
+  };
+  
+  // Handle deletion confirmation
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    onDelete?.();
+    setIsDeleteDialogOpen(false);
   };
   
   // Handle field changes
@@ -94,51 +118,77 @@ export default function FormPanel({
   };
 
   return (
-    <Card className="rounded-xl">
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <h3>{title}</h3>
-          {!alwaysEditing && (
-            <div className="flex space-x-2">
-              {!isEditing ? (
-                <>
-                  <Button variant="outline" size="sm" onClick={handleToggleEdit}>
-                    Edit
-                  </Button>
-                  {onDelete && (
-                    <Button variant="destructive" size="sm" onClick={onDelete}>
-                      Delete
+    <>
+      <Card className="rounded-xl">
+        <CardHeader>
+          <CardTitle className="flex justify-between items-center">
+            <h3>{title}</h3>
+            {!alwaysEditing && (
+              <div className="flex space-x-2">
+                {!isEditing ? (
+                  <>
+                    <Button variant="outline" size="sm" onClick={handleToggleEdit}>
+                      Edit
                     </Button>
-                  )}
-                </>
-              ) : (
-                <Button variant="outline" size="sm" onClick={handleToggleEdit}>
-                  Cancel
-                </Button>
-              )}
-            </div>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="px-10 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {fields.map((field) => (
-            <div key={field.name} className="grid gap-2">
-              <Label htmlFor={field.name}>{field.label}</Label>
-              {renderFormField(field)}
-              {showEditMode && <InputError message={errors[field.name]} />}
-            </div>
-          ))}
+                    {onDelete && (
+                      <Button 
+                        variant="destructive" 
+                        size="sm" 
+                        onClick={handleDeleteClick}
+                        className="flex items-center gap-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <Button variant="outline" size="sm" onClick={handleToggleEdit}>
+                    Cancel
+                  </Button>
+                )}
+              </div>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-10 py-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {fields.map((field) => (
+              <div key={field.name} className="grid gap-2">
+                <Label htmlFor={field.name}>{field.label}</Label>
+                {renderFormField(field)}
+                {showEditMode && <InputError message={errors[field.name]} />}
+              </div>
+            ))}
 
-          {showEditMode && onSubmit && (
-            <div className="flex justify-end">
-              <Button type="submit" disabled={loading}>
-                {loading ? 'Processing...' : submitLabel}
-              </Button>
-            </div>
-          )}
-        </form>
-      </CardContent>
-    </Card>
+            {showEditMode && onSubmit && (
+              <div className="flex justify-end">
+                <Button type="submit" disabled={loading}>
+                  {loading ? 'Processing...' : submitLabel}
+                </Button>
+              </div>
+            )}
+          </form>
+        </CardContent>
+      </Card>
+      
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteConfirmationMessage}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

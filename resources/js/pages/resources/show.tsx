@@ -1,12 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import InputError from '@/components/input-error';
+import { Head, useForm, router } from '@inertiajs/react';
 import FormPanel from '@/components/resources/show/form-panel';
+import { useEffect } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,17 +12,33 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ResourcesShow({ formFields, formData, pageProperties }: { formFields: any; formData: any; pageProperties: any }) {
-    const { data, setData, post, put, processing, errors } = useForm(formData);
+    const { data, setData, post, put, delete: destroy, processing, errors } = useForm(formData);
     
+    // Handle form submission (create/update)
     const handleSubmit = () => {
-        if (data.id) {
+        if (resId) {
             // Update existing resource
-            put(`/${pageProperties.resource}/${data.id}`);
+            put(`/${pageProperties.resource}/${resId}`);
         } else {
             // Create new resource
             post(`/${pageProperties.resource}`);
         }
     };
+
+    const resId = data[pageProperties.pk]
+    
+    // Handle resource deletion
+    const handleDelete = () => {
+        if (!resId) return; // Don't attempt to delete if no ID (new record)
+        
+        destroy(`/${pageProperties.resource}/${resId}`, {
+            onSuccess: () => {
+                // Redirect to listing page on successful delete
+                router.visit(`/${pageProperties.resource}`);
+            }
+        });
+    };
+    
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={pageProperties.title} />
@@ -39,7 +51,9 @@ export default function ResourcesShow({ formFields, formData, pageProperties }: 
                         errors={errors as Record<string, string>}
                         setData={setData}
                         onSubmit={handleSubmit}
-                        alwaysEditing={data.id === null}
+                        onDelete={resId ? handleDelete : undefined}
+                        deleteConfirmationMessage={`Are you sure you want to delete this ${pageProperties.resource.replace(/-/g, ' ')}? This action cannot be undone.`}
+                        alwaysEditing={resId === null}
                         loading={processing}
                     />
                 </div>
