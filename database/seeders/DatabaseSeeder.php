@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
             'email' => Faker::create()->unique()->safeEmail,
         ]);
         
+        // Add the roles and permissions seeder
+        $this->call(RolesAndPermissionsSeeder::class);
+        
         // Run seeders in the correct order (dependencies first)
         $this->call([
             InventoryLocationSeeder::class,

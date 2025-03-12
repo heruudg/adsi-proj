@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     $resources = [
         'product',
         'inventory_location',
-        'bill_of_materials',
+        'bill_of_material',
         'manufacturing_order',
         'manufacturing_status',
         'raw_material',

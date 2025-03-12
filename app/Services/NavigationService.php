@@ -19,13 +19,39 @@ class NavigationService
             [
                 'title' => 'Product',
                 'url' => '/product',
-                'icon' => 'LayoutGrid',
+                'icon' => 'Package',
             ],
             [
                 'title' => 'Inventory Location',
                 'url' => '/inventory_location',
-                'icon' => 'Folder',
-            ]
+                'icon' => 'MapPin',
+            ],
+            [
+                'title' => 'Bill of Materials',
+                'url' => '/bill_of_material',
+                'icon' => 'FileText',
+            ],
+            [
+                'title' => 'Manufacturing Order',
+                'url' => '/manufacturing_order',
+                'icon' => 'Clipboard',
+            ],
+            [
+                'title' => 'Manufacturing Status',
+                'url' => '/manufacturing_status',
+                'icon' => 'Activity',
+            ],
+            [
+                'title' => 'Raw Material',
+                'url' => '/raw_material',
+                'icon' => 'Box',
+            ],
+            [
+                'title' => 'Work Center',
+                'url' => '/work_center',
+                'icon' => 'Factory',
+            ],
+            
         ];
         
         // Add more items based on permissions
