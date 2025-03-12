@@ -28,8 +28,8 @@ class ResourceController extends Controller
         }
         $this->tbName = \Illuminate\Support\Pluralizer::plural($this->objName,2);
         $this->model = 'App\\Models\\' . str_replace('_', '', ucwords($this->objName, '_'));
-        $this->seedTableAndFormHead();
         $this->pk = $this->getColumns()[0];
+        $this->seedTableAndFormHead();
     }
 
     private function seedTableAndFormHead(){
@@ -55,7 +55,7 @@ class ResourceController extends Controller
                 "required" => true,
             ];
             }, array_filter($this->getColumns(), function($col) {
-            return $col !== 'deleted_at';
+            return !in_array($col, ['deleted_at', 'created_at', 'updated_at']);
             }));
         }
     }
