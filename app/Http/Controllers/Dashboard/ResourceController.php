@@ -147,6 +147,10 @@ class ResourceController extends Controller
 
     }
 
+    protected function getFormFields(){
+        return $this->formFields;
+    }
+
     protected function save(Request $request, int $id = null){
         $data = $this->prepareStoreData($request, (int)$id);
         $data->save();
@@ -182,7 +186,7 @@ class ResourceController extends Controller
         }
         return Inertia::render('resources/show', [
             "formData" => $data,
-            "formFields" => $this->formFields,
+            "formFields" => $this->getFormFields(),
             "pageProperties" => $this->getPageProperties(),
         ]);
     }
@@ -204,7 +208,7 @@ class ResourceController extends Controller
         $data = $this->prepareShowData($request, $id);
         return Inertia::render('resources/show', $this->setPageData([
             "formData" => $data,
-            "formFields" => $this->formFields]));
+            "formFields" => $this->getFormFields()]));
     }
 
     /**
