@@ -17,10 +17,7 @@ class BillOfMaterial extends Model
         'work_ctr_id',
         'product_id',
         'bom_quantity',
-        'material_name',
         'bom_material_qty',
-        'material_uom',
-        'work_ctr_name',
         'bom_name',
         'bom_qty_uom'
     ];

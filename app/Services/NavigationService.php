@@ -51,6 +51,11 @@ class NavigationService
                 'url' => '/work_center',
                 'icon' => 'Factory',
             ],
+            [
+                'title' => 'User',
+                'url' => '/user',
+                'icon' => 'User',
+            ],
             
         ];
         

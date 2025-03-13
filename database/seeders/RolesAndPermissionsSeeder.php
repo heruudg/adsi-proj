@@ -32,10 +32,10 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'delete-inventory_location']);
 
         // Create permissions for bill_of_materials
-        Permission::create(['name' => 'create-bill_of_materials']);
-        Permission::create(['name' => 'view-bill_of_materials']);
-        Permission::create(['name' => 'update-bill_of_materials']);
-        Permission::create(['name' => 'delete-bill_of_materials']);
+        Permission::create(['name' => 'create-bill_of_material']);
+        Permission::create(['name' => 'view-bill_of_material']);
+        Permission::create(['name' => 'update-bill_of_material']);
+        Permission::create(['name' => 'delete-bill_of_material']);
 
         // Create permissions for work_center
         Permission::create(['name' => 'create-work_center']);
@@ -74,7 +74,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view-inventory_location',
             'update-inventory_location',
             'delete-inventory_location',
-            'view-bill_of_materials',
+            'view-bill_of_material',
             'view-work_center',
             'view-manufacturing_status',
             'login-user'

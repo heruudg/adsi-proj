@@ -27,15 +27,6 @@ class ManufacturingOrderFactory extends Factory
         // Generate finish date between start date and 2 months after
         $finishDate = $this->faker->dateTimeBetween($startDate, date('Y-m-d', strtotime($startDate . ' +60 days')))->format('Y-m-d');
         
-        // Status options (note: this is different from mfg_stat_id)
-        $statusOptions = [
-            'On Schedule', 
-            'Delayed', 
-            'Ahead of Schedule', 
-            'On Hold',
-            'Quality Issue',
-            'Material Shortage'
-        ];
         
         return [
             'bom_id' => $this->faker->randomElement($bomIds),
@@ -43,7 +34,6 @@ class ManufacturingOrderFactory extends Factory
             'prod_manufacture_qty' => $this->faker->randomFloat(2, 10, 1000),
             'start_date' => $startDate,
             'finish_date' => $finishDate,
-            'status' => $this->faker->randomElement($statusOptions),
         ];
     }
 }

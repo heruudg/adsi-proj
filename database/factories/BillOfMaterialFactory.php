@@ -50,10 +50,7 @@ class BillOfMaterialFactory extends Factory
             'work_ctr_id' => $workCenter->work_center_id,
             'product_id' => $product->product_id,
             'bom_quantity' => $bomQuantity,
-            'material_name' => $material->material_name,
             'bom_material_qty' => $bomMaterialQty,
-            'material_uom' => $material->material_uom ?? $this->faker->randomElement($uoms),
-            'work_ctr_name' => $workCenter->work_ctr_name,
             'bom_name' => $bomName,
             'bom_qty_uom' => $product->product_uom ?? $this->faker->randomElement($uoms),
         ];

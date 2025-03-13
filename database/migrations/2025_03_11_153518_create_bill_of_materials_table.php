@@ -17,10 +17,7 @@ return new class extends Migration
             $table->foreignId('work_ctr_id')->constrained('work_centers', 'work_center_id');
             $table->foreignId('product_id')->constrained('products', 'product_id');
             $table->float('bom_quantity', 8, 2);
-            $table->string('material_name', 50);
             $table->float('bom_material_qty', 8, 2);
-            $table->string('material_uom', 10);
-            $table->string('work_ctr_name', 50);
             $table->string('bom_name', 50);
             $table->string('bom_qty_uom', 10);
             $table->timestamps();

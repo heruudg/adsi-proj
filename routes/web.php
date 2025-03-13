@@ -13,6 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name(name: 'dashboard');
 
     $resources = [
+        'user',
         'product',
         'inventory_location',
         'bill_of_material',

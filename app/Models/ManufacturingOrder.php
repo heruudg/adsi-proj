@@ -17,8 +17,7 @@ class ManufacturingOrder extends Model
         'mfg_stat_id',
         'prod_manufacture_qty',
         'start_date',
-        'finish_date',
-        'status'
+        'finish_date'
     ];
     
     protected $casts = [

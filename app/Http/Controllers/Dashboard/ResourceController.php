@@ -142,7 +142,9 @@ class ResourceController extends Controller
             $obj = $this->model::findOrFail($id);
         }
         foreach ($data as $key => $value) {
-            $obj->$key = $value;
+            if(in_array($key, $this->getColumns())){
+                $obj->$key = $value;
+            }
         }
         return $obj;
     }

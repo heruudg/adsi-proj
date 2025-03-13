@@ -18,7 +18,6 @@ return new class extends Migration
             $table->float('prod_manufacture_qty', 8, 2);
             $table->date('start_date');
             $table->date('finish_date');
-            $table->string('status', 50);
             $table->timestamps();
             $table->softDeletes();
 
