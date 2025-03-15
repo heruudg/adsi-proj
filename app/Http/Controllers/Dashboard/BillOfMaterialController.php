@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\BillOfMaterialItem;
 use Illuminate\Http\Request;
+use App\Models\BillOfMaterialItem;
 
 class BillOfMaterialController extends ResourceController
 {
@@ -76,39 +76,11 @@ class BillOfMaterialController extends ResourceController
         return $this->formFields;
     }
 
-    protected function prepareShowData(Request $request, $id)
-    {
-        $data = parent::prepareShowData($request, $id);
-        $data['items'] = BillOfMaterialItem::where('bill_of_material_id', $id)->paginate();
-        return $data;
-    }
 
     protected function getFormChildren($id) {
+        $bomItemController = new BillOfMaterialItemController();
         return [
-            [
-                "tableHeader" => [
-                    [
-                        "title" => "Material",
-                        "column" => "raw_material.material_name",
-                    ],
-                    [
-                        "title" => "Work Center",
-                        "column" => "work_center.work_ctr_name",
-                    ],
-                    [
-                        "title" => "Quantity",
-                        "column" => "bom_material_qty",
-                    ]
-                ],
-                "tableData" => BillOfMaterialItem::where('bill_of_material_id', $id)
-                            ->with(['rawMaterial','workCenter'])
-                            ->paginate(),
-                "pageProperties" => [
-                    "title" => "Bill of Material Items",
-                    "resource" => "bill_of_material_items",
-                    "pk" => "item_id",
-                ],
-            ]
+            $bomItemController->getPropAsChildren($id),
         ];
     }
     
