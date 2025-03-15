@@ -3,11 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { FormField } from '@/types';
+import { FormField as BaseFormField } from '@/types';
 import ReadOnlyField from './form-fields/read-only-field';
 import SelectField from './form-fields/select-field';
 import TextareaField from './form-fields/textarea-field';
 import InputField from './form-fields/input-field';
+import { ResourcesListingProps } from '@/types/component';
+
+interface FormField extends BaseFormField {
+  property?: {
+    tableHeader?: any;
+    pageProperties?: any;
+  };
+}
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,10 +27,12 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Trash2 } from 'lucide-react';
+import ResourceField from './form-fields/resource-field';
 
 interface FormPanelProps {
   title: string;
   fields: FormField[];
+  children?: ResourcesListingProps[];
   data: Record<string, any>;
   errors: Record<string, string>;
   setData: (name: string, value: any) => void;
@@ -38,6 +48,7 @@ export default function FormPanel({
   title,
   fields,
   data,
+  children,
   errors,
   setData,
   onSubmit,
@@ -169,6 +180,9 @@ export default function FormPanel({
               </div>
             )}
           </form>
+          {children && children.map((child, index) => (
+            <ResourceField key={index} {...child} />
+          ))}
         </CardContent>
       </Card>
       

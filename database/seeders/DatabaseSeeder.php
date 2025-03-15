@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\BillOfMaterialItemFactory;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             RawMaterialSeeder::class,
             BillOfMaterialSeeder::class,
             ManufacturingOrderSeeder::class,
+            BillOfMaterialItemSeeder::class,
         ]);
     }
 }

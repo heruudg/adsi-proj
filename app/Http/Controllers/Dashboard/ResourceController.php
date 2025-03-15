@@ -131,6 +131,9 @@ class ResourceController extends Controller
     }
 
     protected function prepareShowData(Request $request, $id){
+        if($this->with) {
+            return $this->model::with($this->with)->find($id);
+        }
         return $this->model::find($id);
     }
 
@@ -163,6 +166,11 @@ class ResourceController extends Controller
         $this->afterStoreData($request, $data);
         return $data;
     }
+
+    protected function getFormChildren($id){
+        return [];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -220,6 +228,7 @@ class ResourceController extends Controller
         $data = $this->prepareShowData($request, $id);
         return Inertia::render('resources/show', $this->setPageData([
             "formData" => $data,
+            "formChildren" => $this->getFormChildren($id),
             "formFields" => $this->getFormFields()]));
     }
 

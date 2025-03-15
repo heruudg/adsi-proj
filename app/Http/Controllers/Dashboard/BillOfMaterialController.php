@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
+use App\Models\BillOfMaterialItem;
 use Illuminate\Http\Request;
 
 class BillOfMaterialController extends ResourceController
 {
     //
-    protected $with = ['product','rawMaterial','workCenter'];
+    protected $with = ['product'];
     protected $tableHeader = [
         [
             "title" => "BOM Name",
@@ -23,24 +23,8 @@ class BillOfMaterialController extends ResourceController
             "column" => "bom_quantity",
         ],
         [
-            "title" => "Material UOM",
-            "column" => "material_uom",
-        ],
-        [
-            "title" => "Material Name",
-            "column" => "material_name",
-        ],
-        [
             "title" => "Product",
             "column" => "product.product_name",
-        ],
-        [
-            "title" => "Raw Material",
-            "column" => "raw_material.material_name",
-        ],
-        [
-            "title" => "Work Center",
-            "column" => "work_center.work_ctr_name",
         ],
         [
             "title" => "Created At",
@@ -55,30 +39,6 @@ class BillOfMaterialController extends ResourceController
     ];
 
     protected $formFields = [
-        [
-            "type" => "select",
-            "label" => "Product",
-            "name" => "product_id",
-            "placeholder" => "Product",
-            "required" => true,
-            "options" => [],
-        ],
-        [
-            "type" => "select",
-            "label" => "Raw Material",
-            "name" => "material_id",
-            "placeholder" => "Raw Material",
-            "required" => true,
-            "options" => [],
-        ],
-        [
-            "type" => "select",
-            "label" => "Work Center",
-            "name" => "work_ctr_id",
-            "placeholder" => "Work Center",
-            "required" => true,
-            "options" => [],
-        ],
         [
             "type" => "text",
             "label" => "BOM Name",
@@ -101,26 +61,55 @@ class BillOfMaterialController extends ResourceController
             "required" => true,
         ],
         [
-            "type" => "text",
-            "label" => "Material UOM",
-            "name" => "material_uom",
-            "placeholder" => "Material UOM",
+            "type" => "select",
+            "label" => "Product",
+            "name" => "product_id",
+            "placeholder" => "Product",
             "required" => true,
-        ],
-        [
-            "type" => "text",
-            "label" => "Material Name",
-            "name" => "material_name",
-            "placeholder" => "Material Name",
-            "required" => true,
-        ],
+            "options" => [],
+        ]
     ];
 
     protected function getFormFields(){
-        $this->formFields[0]['options'] = $this->getProductOptions();
-        $this->formFields[1]['options'] = $this->getRawMaterialOptions();
-        $this->formFields[2]['options'] = $this->getWorkCenterOptions();
+        $this->formFields[3]['options'] = $this->getProductOptions();
+
         return $this->formFields;
+    }
+
+    protected function prepareShowData(Request $request, $id)
+    {
+        $data = parent::prepareShowData($request, $id);
+        $data['items'] = BillOfMaterialItem::where('bill_of_material_id', $id)->paginate();
+        return $data;
+    }
+
+    protected function getFormChildren($id) {
+        return [
+            [
+                "tableHeader" => [
+                    [
+                        "title" => "Material",
+                        "column" => "raw_material.material_name",
+                    ],
+                    [
+                        "title" => "Work Center",
+                        "column" => "work_center.work_ctr_name",
+                    ],
+                    [
+                        "title" => "Quantity",
+                        "column" => "bom_material_qty",
+                    ]
+                ],
+                "tableData" => BillOfMaterialItem::where('bill_of_material_id', $id)
+                            ->with(['rawMaterial','workCenter'])
+                            ->paginate(),
+                "pageProperties" => [
+                    "title" => "Bill of Material Items",
+                    "resource" => "bill_of_material_items",
+                    "pk" => "item_id",
+                ],
+            ]
+        ];
     }
     
     protected function getProductOptions()

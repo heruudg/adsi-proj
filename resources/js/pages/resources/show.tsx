@@ -11,7 +11,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ResourcesShow({ formFields, formData, pageProperties }: { formFields: any; formData: any; pageProperties: any }) {
+export default function ResourcesShow({ formFields, formData, formChildren, pageProperties }: { formFields: any; formData: any; formChildren:any; pageProperties: any }) {
     const { data, setData, post, put, delete: destroy, processing, errors } = useForm(formData);
     
     // Handle form submission (create/update)
@@ -47,6 +47,7 @@ export default function ResourcesShow({ formFields, formData, pageProperties }: 
                     <FormPanel
                         title={pageProperties.title}
                         fields={formFields}
+                        children={formChildren}
                         data={data}
                         errors={errors as Record<string, string>}
                         setData={setData}

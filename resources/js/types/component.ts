@@ -12,3 +12,13 @@ export interface TableHeader {
     column: string;
     type?: 'text' | 'datetime' | 'date' | 'time';
 }
+
+export interface ResourcesListingProps {
+    tableHeader: TableHeader[];
+    tableData: any[];
+    pageProperties: {
+        title: string;
+        resource: string;
+        pk: string;
+    };
+}
