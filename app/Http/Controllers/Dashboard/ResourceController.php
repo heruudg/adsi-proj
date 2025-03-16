@@ -218,7 +218,7 @@ class ResourceController extends Controller
     {
         $data = $this->save($request);
         return to_route("{$this->objName}.show", $data->{$this->pk})
-        ->with('message', "{$this->objTitle} has been updated successfully.");
+        ->with('message', "{$this->objTitle} has been created successfully.");
     }
 
     /**

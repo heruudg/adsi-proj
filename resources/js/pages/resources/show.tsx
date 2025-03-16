@@ -21,7 +21,9 @@ export default function ResourcesShow({ formFields, formData, formChildren, page
             put(`/${pageProperties.resource}/${resId}`);
         } else {
             // Create new resource
-            post(`/${pageProperties.resource}`);
+            post(`/${pageProperties.resource}`,{
+                preserveState: false
+            });
         }
     };
 
