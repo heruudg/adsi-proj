@@ -17,10 +17,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => Faker::create()->name,
-            'email' => Faker::create()->unique()->safeEmail,
-        ]);
+        $roles = ['admin','inventory-staff', 'production-staff'];
+
+        foreach ($roles as $key => $role) {
+            $user = User::factory()->create([
+                'name' => Faker::create()->name,
+                'email' => "{$role}@example.com",
+            ]);
+            $user->assignRole($role);
+        }
         
         // Add the roles and permissions seeder
         $this->call(RolesAndPermissionsSeeder::class);

@@ -11,7 +11,7 @@ use App\Models\WorkCenter;
 class BillOfMaterialItemController extends ResourceController
 {
     public function getPropAsChildren($bill_of_material_id){
-        return             [
+        return [
             "tableHeader" => [
                 [
                     "title" => "Material",
@@ -54,6 +54,9 @@ class BillOfMaterialItemController extends ResourceController
                     "placeholder" => "Quantity",
                     "required" => true,
                 ]
+            ],
+            "reference" => [
+                "bill_of_material_id" => $bill_of_material_id
             ]
         ];
 

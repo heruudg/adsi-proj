@@ -217,7 +217,8 @@ class ResourceController extends Controller
     public function store(Request $request)
     {
         $data = $this->save($request);
-        return to_route("{$this->objName}.show", $data->{$this->pk});
+        return to_route("{$this->objName}.show", $data->{$this->pk})
+        ->with('message', "{$this->objTitle} has been updated successfully.");
     }
 
     /**
@@ -244,7 +245,8 @@ class ResourceController extends Controller
     public function update(Request $request, $id)
     {
         $data = $this->save($request, $id);
-        return to_route("{$this->objName}.show", parameters: $data->{$this->pk});
+        return to_route("{$this->objName}.show", parameters: $data->{$this->pk})
+            ->with('message', "{$this->objTitle} has been updated successfully.");
     }
 
     /**
