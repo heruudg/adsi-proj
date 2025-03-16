@@ -32,10 +32,6 @@ class ManufacturingOrderController extends ResourceController
             "type" => "date",
         ],
         [
-            "title" => "Status",
-            "column" => "status",
-        ],
-        [
             "title" => "Created At",
             "column" => "created_at",
             "type" => "datetime",
