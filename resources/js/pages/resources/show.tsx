@@ -39,6 +39,14 @@ export default function ResourcesShow({
         }
     };
 
+    const handleActionButtonClick = (button: any) => {
+        if(button.action == 'api'){
+            post(button.url, {
+                preserveState: false,
+            });
+        }
+    }
+
     const resId = data[pageProperties.pk]
     
     // Handle resource deletion
@@ -74,6 +82,7 @@ export default function ResourcesShow({
                         setData={setData}
                         onSubmit={handleSubmit}
                         onDelete={resId ? handleDelete : undefined}
+                        onActionButtonClick={handleActionButtonClick}
                         deleteConfirmationMessage={`Are you sure you want to delete this ${pageProperties.resource.replace(/-/g, ' ')}? This action cannot be undone.`}
                         alwaysEditing={resId === null}
                         loading={processing}

@@ -15,12 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
+        User::factory(10)->create();
         // Add the roles and permissions seeder
         $this->call(RolesAndPermissionsSeeder::class);
-        
-        $roles = ['admin','inventory-staff', 'production-staff'];
+
+        $roles = ['super-admin','inventory-staff', 'production-staff'];
 
         foreach ($roles as $key => $role) {
             $user = User::factory()->create([

@@ -6,133 +6,173 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
         // Reset cached roles and permissions
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions for raw_material
-        Permission::create(['name' => 'add-raw_material']);
-        Permission::create(['name' => 'view-raw_material']);
-        Permission::create(['name' => 'update-raw_material']);
-        Permission::create(['name' => 'delete-raw_material']);
+        // Raw Material Permissions
+        $rawMaterialPermissions = [
+            'add-raw-material',
+            'view-raw-material',
+            'update-raw-material',
+            'delete-raw-material',
+        ];
 
-        // Create permissions for product
-        Permission::create(['name' => 'add-product']);
-        Permission::create(['name' => 'view-product']);
-        Permission::create(['name' => 'update-product']);
-        Permission::create(['name' => 'delete-product']);
-
-        // Create permissions for inventory_location
-        Permission::create(['name' => 'add-inventory_location']);
-        Permission::create(['name' => 'view-inventory_location']);
-        Permission::create(['name' => 'update-inventory_location']);
-        Permission::create(['name' => 'delete-inventory_location']);
-
-        // Create permissions for bill_of_materials
-        Permission::create(['name' => 'create-bill_of_material']);
-        Permission::create(['name' => 'view-bill_of_material']);
-        Permission::create(['name' => 'update-bill_of_material']);
-        Permission::create(['name' => 'delete-bill_of_material']);
-
-        // Create permissions for work_center
-        Permission::create(['name' => 'create-work_center']);
-        Permission::create(['name' => 'view-work_center']);
-        Permission::create(['name' => 'update-work_center']);
-        Permission::create(['name' => 'delete-work_center']);
-
-        // Create permissions for manufacturing_order
-        Permission::create(['name' => 'create-manufacturing_order']);
-        Permission::create(['name' => 'start-manufacturing_order']);
-        Permission::create(['name' => 'finish-manufacturing_order']);
-        Permission::create(['name' => 'cancel-manufacturing_order']);
-
-        // Create permissions for manufacturing_status
-        Permission::create(['name' => 'add-manufacturing_status']);
-        Permission::create(['name' => 'view-manufacturing_status']);
-        Permission::create(['name' => 'update-manufacturing_status']);
-        Permission::create(['name' => 'delete-manufacturing_status']);
-
-        // Create permissions for authentication
-        Permission::create(['name' => 'register-user']);
-        Permission::create(['name' => 'login-user']);
-
-        // Create roles and assign permissions
-        $inventoryStaffRole = Role::create(['name' => 'inventory-staff']);
-        $inventoryStaffRole->givePermissionTo([
-            'add-raw_material',
-            'view-raw_material',
-            'update-raw_material',
-            'delete-raw_material',
+        // Product Permissions
+        $productPermissions = [
             'add-product',
             'view-product',
             'update-product',
             'delete-product',
-            'add-inventory_location',
-            'view-inventory_location',
-            'update-inventory_location',
-            'delete-inventory_location',
-            'view-bill_of_material',
-            'view-work_center',
-            'view-manufacturing_status',
-            'login-user'
+        ];
+
+        // Inventory Location Permissions
+        $inventoryLocationPermissions = [
+            'add-inventory-location',
+            'view-inventory-location',
+            'update-inventory-location',
+            'delete-inventory-location',
+        ];
+
+        // Bill of Material Permissions
+        $billOfMaterialPermissions = [
+            'create-bill-of-material',
+            'view-bill-of-material',
+            'update-bill-of-material',
+            'delete-bill-of-material',
+        ];
+
+        // Work Center Permissions
+        $workCenterPermissions = [
+            'create-work-center',
+            'view-work-center',
+            'update-work-center',
+            'delete-work-center',
+        ];
+
+        // Manufacturing Order Permissions
+        $manufacturingOrderPermissions = [
+            'create-manufacturing-order',
+            'start-manufacturing-order',
+            'finish-manufacturing-order',
+            'cancel-manufacturing-order',
+        ];
+
+        // Manufacturing Status Permissions
+        $manufacturingStatusPermissions = [
+            'add-manufacturing-status',
+            'update-manufacturing-status',
+            'view-manufacturing-status',
+            'delete-manufacturing-status',
+        ];
+
+        // Auth Permissions
+        $authPermissions = [
+            'register',
+            'login',
+        ];
+
+        // Create permissions
+        $allPermissions = array_merge(
+            $rawMaterialPermissions,
+            $productPermissions,
+            $inventoryLocationPermissions,
+            $billOfMaterialPermissions,
+            $workCenterPermissions,
+            $manufacturingOrderPermissions,
+            $manufacturingStatusPermissions,
+            $authPermissions
+        );
+
+        foreach ($allPermissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+
+        // Create roles and assign permissions
+        $inventoryStaffRole = Role::create(['name' => 'inventory-staff']);
+        $inventoryStaffRole->givePermissionTo([
+            // Raw Material
+            'add-raw-material',
+            'view-raw-material',
+            'update-raw-material',
+            'delete-raw-material',
+            // Product
+            'add-product',
+            'view-product',
+            'update-product',
+            'delete-product',
+            // Inventory Location
+            'add-inventory-location',
+            'view-inventory-location',
+            'update-inventory-location',
+            'delete-inventory-location',
+            // Bill of Material
+            'create-bill-of-material',
+            'view-bill-of-material',
+            'update-bill-of-material',
+            'delete-bill-of-material',
+            // Auth
+            'register',
+            'login',
         ]);
 
         $productionStaffRole = Role::create(['name' => 'production-staff']);
         $productionStaffRole->givePermissionTo([
-            'view-raw_material',
+            // Work Center
+            'create-work-center',
+            'view-work-center',
+            'update-work-center',
+            'delete-work-center',
+            // Manufacturing Order
+            'create-manufacturing-order',
+            'start-manufacturing-order',
+            'finish-manufacturing-order',
+            'cancel-manufacturing-order',
+            // Manufacturing Status
+            'add-manufacturing-status',
+            'update-manufacturing-status',
+            'view-manufacturing-status',
+            'delete-manufacturing-status',
+            // View Only Permissions
+            'view-raw-material',
             'view-product',
-            'view-inventory_location',
-            'create-bill_of_material',
-            'view-bill_of_material',
-            'update-bill_of_material',
-            'delete-bill_of_material',
-            'create-work_center',
-            'view-work_center',
-            'update-work_center',
-            'delete-work_center',
-            'create-manufacturing_order',
-            'start-manufacturing_order',
-            'finish-manufacturing_order',
-            'cancel-manufacturing_order',
-            'add-manufacturing_status',
-            'view-manufacturing_status',
-            'update-manufacturing_status',
-            'delete-manufacturing_status',
-            'login-user'
+            'view-bill-of-material',
+            // Auth
+            'register',
+            'login',
         ]);
 
+        // Create Super Admin role with all permissions
+        $superAdminRole = Role::create(['name' => 'super-admin']);
+        $superAdminRole->givePermissionTo(Permission::all());
 
-        // Admin role - gets all permissions
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo(Permission::all());
+        // Create demo users and assign roles
+        $inventoryUser = User::factory()->create([
+            'name' => 'Inventory Staff',
+            'email' => 'inventory@example.com',
+        ]);
+        $inventoryUser->assignRole('inventory-staff');
 
-        // Assign admin role to first user (if exists)
-        $user = User::first();
-        if ($user) {
-            $user->assignRole('admin');
-        }
+        $productionUser = User::factory()->create([
+            'name' => 'Production Staff',
+            'email' => 'production@example.com',
+        ]);
+        $productionUser->assignRole('production-staff');
 
-        // Create more users and assign random roles
-        $users = User::whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'admin');
-        })->get();
-
-        $roles = ['inventory-staff', 'production-staff'];
-
-        foreach ($users as $user) {
-            // Skip if the user already has the admin role
-            if ($user->hasRole('admin')) {
-                continue;
-            }
-            
-            // Assign a random role to each user
-            $randomRole = $roles[array_rand($roles)];
-            $user->assignRole($randomRole);
-            
-            $this->command->info("Assigned role '{$randomRole}' to user: {$user->name}");
-        }
+        $adminUser = User::factory()->create([
+            'name' => 'Administrator',
+            'email' => 'admin@example.com',
+        ]);
+        $adminUser->assignRole('super-admin');
     }
 }

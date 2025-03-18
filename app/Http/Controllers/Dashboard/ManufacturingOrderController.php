@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\BillOfMaterial;
+use App\Models\ManufacturingStatus;
 
 class ManufacturingOrderController extends ResourceController
 {
@@ -47,7 +49,7 @@ class ManufacturingOrderController extends ResourceController
         [
             "type" => "select",
             "label" => "Bill of Materials",
-            "name" => "bom_name",
+            "name" => "bom_id",
             "placeholder" => "Bill of Materials",
             "required" => true,
             "options" => [],
@@ -55,7 +57,7 @@ class ManufacturingOrderController extends ResourceController
         [
             "type" => "select",
             "label" => "Manufacturing Status",
-            "name" => "mfg_stat_name",
+            "name" => "mfg_stat_id",
             "placeholder" => "Manufacturing Status",
             "required" => true,
             "options" => [],
@@ -90,19 +92,78 @@ class ManufacturingOrderController extends ResourceController
         ],
     ];
 
-    protected function getFormButtons($data){
-        return [
-            [
-                'label' => 'Start Manufacturing',
-                'icon' => 'play',
-                'variant' => 'outline',
-                'action' => 'link',
-                'url' => "#"
-            ],
-        ];
+    protected function getFormFields(){
+        $this->formFields[0]['options'] = $this->getBillOfMaterialOptions();
+        $this->formFields[1]['options'] = $this->getManufacturingStatusOptions();
+        return $this->formFields;
     }
 
-    public function startManufacturing(){}
+    protected function getBillOfMaterialOptions()
+    {
+        return BillOfMaterial::all()->map(function($bom) {
+            return [
+                'value' => $bom->bom_id,
+                'label' => $bom->bom_name
+            ];
+        });
+    }
+
+    public function getManufacturingStatusOptions()
+    {
+        return ManufacturingStatus::all()->map(function($status) {
+            return [
+                'value' => $status->mfg_stat_id,
+                'label' => $status->mfg_stat_name
+            ];
+        });
+    }
+
+    protected function getFormButtons($data){
+        $buttons = [];
+        if($data){
+            if($data['start_date'] == null){
+                $buttons[] = [
+                    'label' => 'Start Manufacturing',
+                    'icon' => 'play',
+                    'variant' => 'outline',
+                    'action' => 'api',
+                    'method' => 'POST',
+                    'data' => $data,
+                    'url' => "/manufacturing_order/{$data['mfg_order_id']}/start",
+                ];
+            }
+            if($data['start_date'] != null && $data['finish_date'] == null){
+                $buttons[] = [
+                    'label' => 'Stop Manufacturing',
+                    'icon' => 'stop',
+                    'variant' => 'outline',
+                    'action' => 'api',
+                    'method' => 'POST',
+                    'data' => $data,
+                    'url' => "/manufacturing_order/{$data['mfg_order_id']}/stop",
+                ];
+
+            }
+        }
+        return $buttons;
+    }
+
+    public function startManufacturing($mfg_id){
+        $data = $this->model::findOrFail($mfg_id);
+        $data->start_date = now();
+        $data->mfg_stat_id = 2;
+        $data->save();
+        return redirect()->back()->with('message', 'Manufacturing started successfully');
+    }
+
+
+    public function stopManufacturing($mfg_id){
+        $data = $this->model::findOrFail($mfg_id);
+        $data->finish_date = now();
+        $data->mfg_stat_id = 4;
+        $data->save();
+        return redirect()->back()->with('message', 'Manufacturing stopped successfully');
+    }
 
     protected $with = ['billOfMaterial','manufacturingStatus'];
 }

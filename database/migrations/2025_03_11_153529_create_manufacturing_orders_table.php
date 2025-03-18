@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('bom_id')->constrained('bill_of_materials', 'bom_id');
             $table->foreignId('mfg_stat_id')->constrained('manufacturing_statuses', 'mfg_stat_id');
             $table->float('prod_manufacture_qty', 8, 2);
-            $table->date('start_date');
-            $table->date('finish_date');
+            $table->date('start_date')->nullable();
+            $table->date('finish_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

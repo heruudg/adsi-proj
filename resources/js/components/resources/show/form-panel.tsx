@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { router, usePage } from '@inertiajs/react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
@@ -21,6 +22,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Trash2, Eye, FileText, ArrowRightLeft, Download, Printer, Share2 } from 'lucide-react';
 import ResourceField from './form-fields/resource-field';
+
 
 interface FormField extends BaseFormField {
   property?: {
@@ -49,6 +51,7 @@ interface FormPanelProps {
   setData: (name: string, value: any) => void;
   onSubmit?: () => void;
   onDelete?: () => void;
+  onActionButtonClick?: (button: ActionButton) => void;
   submitLabel?: string;
   loading?: boolean;
   alwaysEditing?: boolean;
@@ -65,6 +68,7 @@ export default function FormPanel({
   setData,
   onSubmit,
   onDelete,
+  onActionButtonClick,
   submitLabel = 'Save',
   loading = false,
   alwaysEditing = false,
@@ -76,6 +80,7 @@ export default function FormPanel({
   const [isButtonLoading, setIsButtonLoading] = useState<string | null>(null);
   const showEditMode = alwaysEditing || isEditing;
   
+  const props = usePage().props
   // Handle edit mode toggle
   const handleToggleEdit = () => {
     if (!alwaysEditing) {
@@ -111,37 +116,7 @@ export default function FormPanel({
   // Handle action button click
   const handleActionButtonClick = (button: ActionButton) => {
     setIsButtonLoading(button.label);
-    
-    if (button.action === 'link' && button.url) {
-      // Use Inertia router for links
-      window.location.href = button.url;
-    } else if (button.action === 'api' && button.url) {
-      // Make API call
-      fetch(button.url, {
-        method: button.method || 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-        },
-        body: button.data ? JSON.stringify(button.data) : undefined
-      })
-      .then(response => response.json())
-      .then(responseData => {
-        // Handle success
-        if (button.redirect) {
-          window.location.href = button.redirect;
-        } else {
-          // Reload current page
-          window.location.reload();
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      })
-      .finally(() => {
-        setIsButtonLoading(null);
-      });
-    }
+    onActionButtonClick?.(button);
   };
   
   // Get appropriate icon component
