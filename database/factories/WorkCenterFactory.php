@@ -31,7 +31,7 @@ class WorkCenterFactory extends Factory
         
         return [
             'work_ctr_name' => $this->faker->randomElement($workCenterTypes) . ' ' . $this->faker->randomElement($areaNumbers),
-            'work_ctr_desc' => $this->faker->sentence(mt_rand(5, 10)),
+            'work_ctr_desc' => $this->faker->sentence(mt_rand(1, 4)),
         ];
     }
 }
