@@ -136,7 +136,16 @@ class ManufacturingOrderController extends ResourceController
         $data->start_date = now();
         $data->mfg_stat_id = 2;
         $data->save();
+        $this->updateQty($data);
         return redirect()->back()->with('message', 'Manufacturing started successfully');
+    }
+
+    private function updateQty($manufacturingOrder){
+        $bomItems = $manufacturingOrder->billOfMaterial->billOfMaterialItems;
+        foreach($bomItems as $bomItem){
+            $bomItem->rawMaterial->material_qty -= $bomItem->bom_material_qty * $manufacturingOrder->prod_manufacture_qty;
+            $bomItem->rawMaterial->save();
+        }
     }
 
 
@@ -145,7 +154,14 @@ class ManufacturingOrderController extends ResourceController
         $data->finish_date = now();
         $data->mfg_stat_id = 4;
         $data->save();
+
         return redirect()->back()->with('message', 'Manufacturing stopped successfully');
+    }
+
+    private function updateQtyProduct($manufacturingOrder){
+        $product = $manufacturingOrder->billOfMaterial->product;
+        $product->product_qty += $manufacturingOrder->prod_manufacture_qty;
+        $product->save();
     }
 
     protected $with = ['billOfMaterial','manufacturingStatus'];

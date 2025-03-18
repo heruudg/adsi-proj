@@ -19,7 +19,7 @@ export default function ResourcesListing({ tableHeader, tableData, pagePropertie
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={pageProperties.title} />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+            <div className="flex flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-2xl font-semibold">{pageProperties.title}</h1>
                     <Link href={`/${pageProperties.resource}/create`}>

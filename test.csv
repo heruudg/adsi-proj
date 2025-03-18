@@ -1,0 +1,60 @@
+Test ID,Test Type,Component,Test Description,Expected Result,Priority,Prerequisites
+M001,Unit,InventoryLocation Model,Test inventory location creation,Model should be created with valid attributes,High,Database connection
+M002,Unit,InventoryLocation Model,Test soft delete functionality,Model should be soft deleted and not visible in normal queries,High,Database connection
+M003,Unit,InventoryLocation Model,Test relationships with products,Should return related products,Medium,Database with test data
+M004,Unit,RawMaterial Model,Test raw material creation,Model should be created with valid attributes,High,Database connection
+M005,Unit,RawMaterial Model,Test relationship with inventory location,Should return the correct inventory location,Medium,Database with test data
+M006,Unit,RawMaterial Model,Test low stock scope functionality,Should return only materials below threshold,Medium,Database with test data
+M007,Unit,Product Model,Test product creation,Model should be created with valid attributes,High,Database connection
+M008,Unit,Product Model,Test relationship with inventory location,Should return the correct inventory location,Medium,Database with test data
+M009,Unit,Product Model,Test relationship with bill of materials,Should return associated BOMs,Medium,Database with test data
+M010,Unit,BillOfMaterial Model,Test BOM creation,Model should be created with valid attributes,High,Database connection
+M011,Unit,BillOfMaterial Model,Test relationships with products and materials,Should return correct product and material relationships,Medium,Database with test data
+M012,Unit,ManufacturingOrder Model,Test order creation,Model should be created with valid attributes,High,Database connection
+M013,Unit,ManufacturingOrder Model,Test relationship with BOM,Should return correct BOM,Medium,Database with test data
+M014,Unit,ManufacturingOrder Model,Test relationship with manufacturing status,Should return correct status,Medium,Database with test data
+M015,Unit,WorkCenter Model,Test work center creation,Model should be created with valid attributes,High,Database connection
+C001,Integration,InventoryLocationController,Test index method for pagination,Should return paginated results,High,Test data and authenticated user
+C002,Integration,InventoryLocationController,Test create method permission,Only authorized users should access create page,High,User with different permissions
+C003,Integration,InventoryLocationController,Test store method validation,Should validate required fields,High,Authenticated user
+C004,Integration,InventoryLocationController,Test update method,Should update inventory location,High,Existing inventory location and authenticated user
+C005,Integration,InventoryLocationController,Test destroy method soft delete,Should soft delete the resource,High,Existing inventory location and authenticated user
+C006,Integration,InventoryLocationController,Test trash view permission,Only authorized users should see trash,Medium,Soft-deleted resources and users with different permissions
+C007,Integration,InventoryLocationController,Test restore functionality,Should restore a soft-deleted record,Medium,Soft-deleted resource and authorized user
+C008,Integration,RawMaterialController,Test index method filters,Should filter by inventory location,Medium,Test data and authenticated user
+C009,Integration,RawMaterialController,Test low stock filter,Should show only low stock materials,Medium,Test data with varying stock levels
+C010,Integration,ProductController,Test index method for pagination,Should return paginated results,High,Test data and authenticated user
+C011,Integration,ProductController,Test relationship data in show method,Should include related inventory location,Medium,Product with relationships
+C012,Integration,BillOfMaterialController,Test BOM creation with relationships,Should create BOM with product and material links,High,Existing products and materials
+C013,Integration,ManufacturingOrderController,Test order creation,Should create a new manufacturing order,High,Existing BOMs and statuses
+C014,Integration,ManufacturingOrderController,Test status updates,Should update order status correctly,High,Existing manufacturing order
+A001,API,Inventory Locations API,Test GET /api/inventory-locations,Should return JSON list of locations,High,API setup and test data
+A002,API,Inventory Locations API,Test POST /api/inventory-locations,Should create new location and return 201,High,API setup and authentication
+A003,API,Inventory Locations API,Test PUT /api/inventory-locations/{id},Should update location and return 200,High,API setup and existing location
+A004,API,Raw Materials API,Test GET /api/raw-materials with filters,Should return filtered materials,Medium,API setup and test data
+A005,API,Products API,Test GET /api/products,Should return JSON list of products,High,API setup and test data
+A006,API,Manufacturing Orders API,Test POST /api/manufacturing-orders,Should create order and return 201,High,API setup and authentication
+F001,Frontend,ResourcesListing Component,Test pagination controls,Should navigate between pages properly,High,Test data with multiple pages
+F002,Frontend,ResourcesListing Component,Test create button,Should navigate to create form,Medium,Proper routing setup
+F003,Frontend,FormPanel Component,Test edit mode toggle,Should switch between view and edit mode,High,Sample form data
+F004,Frontend,FormPanel Component,Test delete confirmation,Should show confirmation before deletion,High,Sample form data
+F005,Frontend,FormPanel Component,Test form submission,Should submit data correctly,High,Sample form data and submission handler
+F006,Frontend,AppSidebar Component,Test navigation items by role,Should show different navigation for different roles,High,User with assigned roles
+F007,Frontend,Alert Dialog Component,Test dialog open/close functionality,Should open and close properly,Medium,UI components setup
+F008,Frontend,Table Component,Test sorting functionality,Should sort data by column,Medium,Sample table data
+F009,Frontend,Table Component,Test action buttons,Should show appropriate actions,Medium,Sample table data
+P001,Permission,Admin User Access,Test admin access to all resources,Should have full access to all pages and actions,High,User with admin role
+P002,Permission,Inventory Staff Access,Test inventory staff resource access,Should access inventory but not production,High,User with inventory role
+P003,Permission,Production Staff Access,Test production staff resource access,Should access production but not inventory,High,User with production role
+P004,Permission,View-only User Access,Test view-only permissions,Should view but not modify resources,Medium,User with viewer role
+P005,Permission,Unauthorized Access,Test access without permission,Should be redirected to dashboard,High,User without specific permissions
+I001,Integration,Complete Workflow,Test inventory to production workflow,Should create location, material, product, BOM and order successfully,High,Clean database
+I002,Integration,Soft Delete Dependencies,Test deleting item with dependencies,Should handle dependencies appropriately,Medium,Resources with relationships
+I003,Integration,User Management,Test role assignment and permissions,Should update user permissions immediately,High,Multiple user accounts
+I004,Integration,Dashboard Stats,Test dashboard statistics accuracy,Should display accurate counts and summaries,Medium,Sample data across all models
+S001,Security,Authentication Flow,Test login and session management,Should authenticate and maintain session properly,High,User accounts
+S002,Security,Authorization Checks,Test direct URL access to restricted pages,Should block unauthorized access,High,User with limited permissions
+S003,Security,CSRF Protection,Test CSRF protection on forms,Should reject requests without valid tokens,High,Form submission endpoints
+S004,Security,Validation,Test input validation and sanitization,Should reject malicious inputs,High,Form submission endpoints
+P001,Performance,Listing Page,Test listing page with 1000+ records,Should load and paginate efficiently,Medium,Large dataset
+P002,Performance,Related Data Loading,Test efficient loading of relationships,Should not cause N+1 query problems,Medium,Data with complex relationships

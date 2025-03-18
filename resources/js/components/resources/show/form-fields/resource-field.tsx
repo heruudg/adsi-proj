@@ -63,7 +63,7 @@ export default function ResourceField({ tableHeader, tableData, pageProperties, 
     
     return (
         <>
-            <div className="flex my-5 h-full flex-1 flex-col gap-4 rounded-xl p-4 border">
+            <div className="flex my-5 flex-1 flex-col gap-4 rounded-xl p-4 border">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium">{pageProperties.title}</h3>
                     <Button 
