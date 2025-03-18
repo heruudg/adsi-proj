@@ -5,6 +5,7 @@ interface InputFieldProps {
     type: string;
     name: string;
     placeholder?: string;
+    readOnly?: boolean;
   };
   value: any;
   onChange: (name: string, value: any) => void;
@@ -16,6 +17,7 @@ export default function InputField({ field, value, onChange }: InputFieldProps) 
       id={field.name}
       type={field.type}
       name={field.name}
+      readOnly={field.readOnly}
       autoComplete="off"
       value={value || ""}
       onChange={(e) => onChange(field.name, e.target.value)}

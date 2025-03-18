@@ -22,6 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'raw_material',
         'work_center',
     ];
+    Route::post('bill_of_material/{bom_id}/bill_of_material_item', 'App\Http\Controllers\Dashboard\BillOfMaterialItemController@storeBomItem')->name('bill_of_material_item.store');
 
     foreach ($resources as $name) {
         $controller = str_replace('_', '', ucwords($name, '_')) .  'Controller';

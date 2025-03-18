@@ -11,7 +11,19 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ResourcesShow({ formFields, formData, formChildren, pageProperties }: { formFields: any; formData: any; formChildren:any; pageProperties: any }) {
+export default function ResourcesShow({ 
+    formFields, 
+    formData, 
+    formChildren, 
+    formButtons = [], 
+    pageProperties 
+}: { 
+    formFields: any; 
+    formData: any; 
+    formChildren: any; 
+    formButtons?: any[]; 
+    pageProperties: any 
+}) {
     const { data, setData, post, put, delete: destroy, processing, errors } = useForm(formData);
     
     // Handle form submission (create/update)
@@ -41,6 +53,13 @@ export default function ResourcesShow({ formFields, formData, formChildren, page
         });
     };
     
+    // Process any URL parameters in button URLs
+    const processedFormButtons = formButtons.map(button => ({
+        ...button,
+        url: button.url?.replace(':id', resId || ''),
+        redirect: button.redirect?.replace(':id', resId || '')
+    }));
+    
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={pageProperties.title} />
@@ -58,6 +77,7 @@ export default function ResourcesShow({ formFields, formData, formChildren, page
                         deleteConfirmationMessage={`Are you sure you want to delete this ${pageProperties.resource.replace(/-/g, ' ')}? This action cannot be undone.`}
                         alwaysEditing={resId === null}
                         loading={processing}
+                        formButtons={processedFormButtons}
                     />
                 </div>
             </div>

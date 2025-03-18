@@ -42,7 +42,7 @@ class BillOfMaterialItemController extends ResourceController
                 [
                     "type" => "select",
                     "label" => "Work Center",
-                    "name" => "work_center_id",
+                    "name" => "work_ctr_id",
                     "placeholder" => "Work Center",
                     "required" => true,
                     "options" => $this->getWorkCenterOptions(),
@@ -56,7 +56,8 @@ class BillOfMaterialItemController extends ResourceController
                 ]
             ],
             "reference" => [
-                "bill_of_material_id" => $bill_of_material_id
+                "value" => $bill_of_material_id,
+                "objName" => "bill_of_material",
             ]
         ];
 
@@ -70,6 +71,21 @@ class BillOfMaterialItemController extends ResourceController
                 'label' => $material->material_name
             ];
         });
+    }
+
+    public function storeBomItem(Request $request, $bom_id)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        
+        $bomItem = new BillOfMaterialItem();
+        $bomItem->bill_of_material_id = $bom_id;
+        $bomItem->material_id = $data['material_id'];
+        $bomItem->work_ctr_id = $data['work_ctr_id'];
+        $bomItem->bom_material_qty = $data['bom_material_qty'];
+        $bomItem->save();
+        // echo $bom_id;'
+        return redirect()->back()->with('message', 'Bill of Material item added successfully');
     }
 
     protected function getWorkCenterOptions()

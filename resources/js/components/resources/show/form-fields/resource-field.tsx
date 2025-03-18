@@ -31,9 +31,10 @@ interface ResourcesListingProps {
         formFields?: any[];
     };
     formFields?: any[];
+    reference?: any;
 }
 
-export default function ResourceField({ tableHeader, tableData, pageProperties, formFields }: ResourcesListingProps) {
+export default function ResourceField({ tableHeader, tableData, pageProperties, formFields, reference }: ResourcesListingProps) {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({});
     
@@ -43,8 +44,11 @@ export default function ResourceField({ tableHeader, tableData, pageProperties, 
     };
     
     const handleSubmit = () => {
-        post(`/${pageProperties.resource}`, {
-            onSuccess: () => {
+        post(`/${reference.objName}/${reference.value}/${pageProperties.resource}`, {
+            preserveState: false,
+            onSuccess: (data) => {
+                console.log(data);
+                
                 setIsFormOpen(false);
             }
         });

@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        // Add the roles and permissions seeder
+        $this->call(RolesAndPermissionsSeeder::class);
+        
         $roles = ['admin','inventory-staff', 'production-staff'];
 
         foreach ($roles as $key => $role) {
@@ -27,8 +30,6 @@ class DatabaseSeeder extends Seeder
             $user->assignRole($role);
         }
         
-        // Add the roles and permissions seeder
-        $this->call(RolesAndPermissionsSeeder::class);
         
         // Run seeders in the correct order (dependencies first)
         $this->call([

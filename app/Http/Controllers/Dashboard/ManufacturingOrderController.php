@@ -68,14 +68,14 @@ class ManufacturingOrderController extends ResourceController
             "required" => true,
         ],
         [
-            "type" => "date",
+            "readOnly" => true,
             "label" => "Start Date",
             "name" => "start_date",
             "placeholder" => "Start Date",
             "required" => true,
         ],
         [
-            "type" => "date",
+            "readOnly" => true,
             "label" => "Finish Date",
             "name" => "finish_date",
             "placeholder" => "Finish Date",
@@ -89,6 +89,20 @@ class ManufacturingOrderController extends ResourceController
             "required" => true,
         ],
     ];
+
+    protected function getFormButtons($data){
+        return [
+            [
+                'label' => 'Start Manufacturing',
+                'icon' => 'play',
+                'variant' => 'outline',
+                'action' => 'link',
+                'url' => "#"
+            ],
+        ];
+    }
+
+    public function startManufacturing(){}
 
     protected $with = ['billOfMaterial','manufacturingStatus'];
 }

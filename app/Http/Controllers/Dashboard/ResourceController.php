@@ -171,6 +171,10 @@ class ResourceController extends Controller
         return [];
     }
 
+    protected function getFormButtons($id){
+        return [];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -229,6 +233,7 @@ class ResourceController extends Controller
         $data = $this->prepareShowData($request, $id);
         return Inertia::render('resources/show', $this->setPageData([
             "formData" => $data,
+            "formButtons" => $this->getFormButtons($data),
             "formChildren" => $this->getFormChildren($id),
             "formFields" => $this->getFormFields()]));
     }
