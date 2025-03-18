@@ -15,27 +15,17 @@ class BillOfMaterialController extends ResourceController
             "column" => "bom_name",
         ],
         [
-            "title" => "BOM Quantity UOM",
-            "column" => "bom_qty_uom",
-        ],
-        [
             "title" => "BOM Quantity",
             "column" => "bom_quantity",
+        ],
+        [
+            "title" => "BOM Quantity UOM",
+            "column" => "bom_qty_uom",
         ],
         [
             "title" => "Product",
             "column" => "product.product_name",
         ],
-        [
-            "title" => "Created At",
-            "column" => "created_at",
-            "type" => "datetime",
-        ],
-        [
-            "title" => "Updated At",
-            "column" => "updated_at",
-            "type" => "datetime",
-        ]
     ];
 
     protected $formFields = [

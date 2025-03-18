@@ -25,16 +25,6 @@ class RawMaterialController extends ResourceController
             "title" => "Raw Material UOM",
             "column" => "material_uom",
         ],
-        [
-            "title" => "Created At",
-            "column" => "created_at",
-            "type" => "datetime",
-        ],
-        [
-            "title" => "Updated At",
-            "column" => "updated_at",
-            "type" => "datetime",
-        ]
     ];
 
     protected $formFields = [

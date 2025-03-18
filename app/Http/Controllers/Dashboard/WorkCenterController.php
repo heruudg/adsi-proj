@@ -17,16 +17,6 @@ class WorkCenterController extends ResourceController
             "title" => "Work Center Description",
             "column" => "work_ctr_desc",
         ],
-        [
-            "title" => "Created At",
-            "column" => "created_at",
-            "type" => "datetime",
-        ],
-        [
-            "title" => "Updated At",
-            "column" => "updated_at",
-            "type" => "datetime",
-        ]
     ];
 
     protected $formFields = [

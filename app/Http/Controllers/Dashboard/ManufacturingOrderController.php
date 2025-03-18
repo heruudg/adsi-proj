@@ -33,16 +33,6 @@ class ManufacturingOrderController extends ResourceController
             "column" => "finish_date",
             "type" => "date",
         ],
-        [
-            "title" => "Created At",
-            "column" => "created_at",
-            "type" => "datetime",
-        ],
-        [
-            "title" => "Updated At",
-            "column" => "updated_at",
-            "type" => "datetime",
-        ]
     ];
 
     protected $formFields = [
@@ -81,13 +71,6 @@ class ManufacturingOrderController extends ResourceController
             "label" => "Finish Date",
             "name" => "finish_date",
             "placeholder" => "Finish Date",
-            "required" => true,
-        ],
-        [
-            "type" => "text",
-            "label" => "Status",
-            "name" => "status",
-            "placeholder" => "Status",
             "required" => true,
         ],
     ];

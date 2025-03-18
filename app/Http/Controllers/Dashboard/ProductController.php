@@ -25,16 +25,6 @@ class ProductController extends ResourceController
             "title" => "Product UOM",
             "column" => "product_uom",
         ],
-        [
-            "title" => "Created At",
-            "column" => "created_at",
-            "type" => "datetime",
-        ],
-        [
-            "title" => "Updated At",
-            "column" => "updated_at",
-            "type" => "datetime",
-        ]
     ];
 
     protected $formFields = [
